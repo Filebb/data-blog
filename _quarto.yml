@@ -16,6 +16,7 @@ format:
       - cosmo
       - brand
     highlight-style: atom-one
+    code-link: true
     css: styles.css
 
 knitr:
