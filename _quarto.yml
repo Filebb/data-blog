@@ -15,7 +15,10 @@ format:
     theme:
       - cosmo
       - brand
+    highlight-style: atom-one
     css: styles.css
 
-
+knitr:
+  opts_chunk:
+    collapse: true
 
