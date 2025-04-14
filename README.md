@@ -1,2 +1,2 @@
-# data-blog
+# Data Blog
 Blog about data
