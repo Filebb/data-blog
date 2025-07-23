@@ -1,0 +1,186 @@
+---
+title: "`data.frame` vs `tibble`"
+date: "2025-04-15"
+categories: [R, base::data.frame, tibble::tibble, tibble::tribble]
+---
+
+# Create
+
+Base R provides a data structure, called `data.frame`, to store and manipulate
+tabular data.
+
+A `data.frame` is a `list` (a R list!) of equal-length vectors.
+
+Creating a `data.frame` is as easy as
+
+```{r}
+df <-
+  base::data.frame(
+    letters = letters,
+    numbers = 1:26
+  )
+```
+
+A `tibble` is the tidyverse version of `data.frame`.
+
+Using similar syntax we can create a `tibble`:
+
+```{r}
+tbl <-
+  tibble::tibble(
+    letters = letters,
+    numbers = 1:26
+  )
+```
+
+# Differences
+
+## Print
+
+The first difference between `data.frame` and `tibble` is about printing:
+tibbles have a print method that shows only the first 10 rows, and all the
+columns that fit on screen. This makes it much easier to work with large data.
+In addition to its name, each column reports its type.
+
+```{r}
+df
+tbl
+```
+
+
+## Subset and Partial Matching
+
+The second difference is about subsetting. Data frames allow partial matching
+for column names:
+
+```{r}
+df$let
+```
+
+On the other hand a tibble is stricter and does not allow partial matching:
+
+```{r}
+tbl$let
+```
+
+This can be very helpful, especially when debugging code, because the message
+tells use where the problem is. Look at what happens in the following example:
+
+```{r}
+df2 <- base::data.frame(
+  letters_lower = letters,
+  letters_upper = LETTERS,
+  numbers = 1:26
+)
+
+df2$let
+```
+
+Since more than one column name partially matches the string 'let', subsetting
+returns `NULL` without generating a warning. It would be more difficult to debug
+a bigger chunk of code if this technique is used. Therefore it’s advisable to
+avoid partial matching when subsetting. Tibbles are good because they forbid us
+to use it.
+
+## Extract a single column with `[`
+
+Subetting a single element from a `data.frame` using `[` does not return a
+`data.frame`.
+
+```{r}
+df_subset <- df[, "letters"]
+
+base::is.data.frame(df_subset)
+
+base::class(df_subset)
+
+utils::str(df_subset)
+```
+
+Conversly, subetting a single element from a `tibble` using `[` returns a
+`tibble`.
+
+```{r}
+tbl_subset <- tbl[, "letters"]
+
+tibble::is_tibble(tbl_subset)
+
+base::class(tbl_subset)
+
+utils::str(tbl_subset)
+```
+
+## Add a New Column Using `$`
+
+Adding a new column to a `data.frame` using `$` will recycle the vector used if
+its length is less than the number of rows of the `data.frame` (but assuming
+that the number of elemnts of the vector is a submultiple of the number of rows
+of the `data.frame`).
+
+```{r}
+df$other_numbers <- 27:28
+
+df$other_numbers
+
+df
+```
+
+In general, a `tibble` does not allow it
+
+```{r}
+#| error: true
+tbl$other_numbers <- 27:28
+```
+
+Unless we want to add a constant column
+
+```{r}
+tbl$constant_column <- 7
+
+tbl$constant_column
+
+tbl
+```
+
+Note that if the length of the vector used to define a new column is equal to
+the number of rows of the tibble, then everything will run smoothly.
+
+```{r}
+#| echo: false
+tbl <-
+  tibble::tibble(
+    letters = letters,
+    numbers = 1:26
+  )
+```
+
+```{r}
+tbl$other_numbers <- 27:52
+
+tbl$other_numbers
+
+tbl
+```
+
+# Create by Row
+
+A useful function coming from the `tibble` package is `tribble` which allow us
+to define a `tibble` by row. This is useful for small tables of data where
+readability is important.
+
+```{r}
+tibble::tribble(
+  ~letters, ~numbers,
+  "a",      1,
+  "b",      2,
+  "c",      3
+)
+```
+
+There are some workarounds to create a `data.frame` by row, however they do not
+
+# References
+
+- [Tibble](https://tibble.tidyverse.org/index.html) package documentation
+
+- [Tibble](https://posit.co/blog/tibble-1-0-0/) from Posit blog
