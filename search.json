@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Data Blog",
+    "section": "",
+    "text": "data.frame vs tibble\n\n\n\nR\n\nbase::data.frame\n\ntibble::tibble\n\ntibble::tribble\n\n\n\n\n\n\n\n\n\nJul 23, 2025\n\n\nfilebb\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nApr 11, 2025\n\n\nTristan O’Malley\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/data-frame-vs-tibble/index.html",
+    "href": "posts/data-frame-vs-tibble/index.html",
+    "title": "\ndata.frame vs tibble\n",
+    "section": "",
+    "text": "data.frame\ntibble\n\n\n\nBase R provides a data structure, called data.frame, to store and manipulate tabular data.\nA data.frame is an R list of equal-length vectors.\nHere’s how to create a simple two-column data.frame using base R:\n\ndf &lt;-\n  base::data.frame(\n    is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,\n                      TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,\n                      FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,\n                      FALSE, FALSE),\n    numbers       = 1:26,\n    values        = seq(1.1, by = 0.1, length.out = 26),\n    letters_lower = letters, # Built-in vector: \"a\" to \"z\"\n    letters_upper = LETTERS  # Built-in vector: \"A\" to \"Z\"\n  )\n\n\n\nThe tidyverse alternative is a tibble, a modern version of data.frame designed to simplify data handling and prevent common pitfalls, like automatic conversion of strings to factors or row name behavior. Tibbles eliminate many of the quirks of base R data.frames, making them safer and more predictable in data workflows.\nAnd here’s the tibble equivalent using tidyverse syntax:\n\ntbl &lt;-\n  tibble::tibble(\n    is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,\n                      TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,\n                      FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,\n                      FALSE, FALSE),\n    numbers       = 1:26,\n    values        = seq(1.1, by = 0.1, length.out = 26),\n    letters_lower = letters,\n    letters_upper = LETTERS\n  )\n\n\n\n\nWhile both structures store the same data, their behavior diverges in subtle but important ways. Let’s look at how they differ when printed, subsetted, or used in a pipeline."
+  },
+  {
+    "objectID": "posts/data-frame-vs-tibble/index.html#list-name-extractor",
+    "href": "posts/data-frame-vs-tibble/index.html#list-name-extractor",
+    "title": "\ndata.frame vs tibble\n",
+    "section": "List Name Extractor $\n",
+    "text": "List Name Extractor $\n\nIn R, the $operator, formally known as the list name extractor, is used to access elements by name from objects that behave like lists, such as data.frames and tibbles.\nIt’s a binary operator: writing x$name is syntactic sugar for \"$\"(x, \"name\"). You can confirm this by inspecting:\n\ndf$values\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n`$`(df, \"values\")\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\ntbl$values\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n`$`(tbl, \"values\")\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\nIn both structures, $ returns the column as a vector. But if the column name doesn’t exist:\n\ndf$missing_column   # Returns NULL silently\n## NULL\n\ntbl$missing_column  # Warning: unknown column, returns NULL\n## Warning: Unknown or uninitialised column: `missing_column`.\n## NULL\n\nTibbles are stricter—they issue a warning when a column is missing. This makes them safer for debugging and helps catch typos or mismatched names early in the workflow."
+  },
+  {
+    "objectID": "posts/data-frame-vs-tibble/index.html#partial-matching",
+    "href": "posts/data-frame-vs-tibble/index.html#partial-matching",
+    "title": "\ndata.frame vs tibble\n",
+    "section": "Partial Matching",
+    "text": "Partial Matching\nUnlike tibbles, base R data.frames allow partial matching when accessing column names:\n\ndf$val # Matches 'values'\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\ntbl$val # Warning: no such column, returns NULL\n## Warning: Unknown or uninitialised column: `val`.\n## NULL\n\nThis stricter behavior is often safer. Consider the following example:\n\ndf$let # Ambiguous: matches multiple columns, returns NULL (silently!)\n## NULL\n\ntbl$let # Warning: requires exact match, returns NULL\n## Warning: Unknown or uninitialised column: `let`.\n## NULL\n\nIn data.frame, $let silently returns NULL, since multiple columns begin with 'let'. No warning is issued, making it easy to miss, especially inside larger pipelines or wrapped functions.\nTibbles, by contrast, enforce exact matching. They generate a warning when the column name isn’t found, helping you catch typos and ambiguous references early. This constraint reduces hidden bugs and promotes safer, more reliable code through clear intent."
+  },
+  {
+    "objectID": "posts/data-frame-vs-tibble/index.html#single-brackets",
+    "href": "posts/data-frame-vs-tibble/index.html#single-brackets",
+    "title": "\ndata.frame vs tibble\n",
+    "section": "Single Brackets [ ]\n",
+    "text": "Single Brackets [ ]\n\nWhen selecting one column with single brackets, both structures preserve column names and types, but the returned object matches the source:\n\n\ndata.frame\ntibble\n\n\n\n\ndf[\"values\"] # Returns a one-column data.frame\n##    values\n## 1     1.1\n## 2     1.2\n## 3     1.3\n## 4     1.4\n## 5     1.5\n## 6     1.6\n## 7     1.7\n## 8     1.8\n## 9     1.9\n## 10    2.0\n## 11    2.1\n## 12    2.2\n## 13    2.3\n## 14    2.4\n## 15    2.5\n## 16    2.6\n## 17    2.7\n## 18    2.8\n## 19    2.9\n## 20    3.0\n## 21    3.1\n## 22    3.2\n## 23    3.3\n## 24    3.4\n## 25    3.5\n## 26    3.6\n\nclass(df) == class(df[\"values\"])\n## [1] TRUE\n\n\n\n\ntbl[\"values\"] # Returns a one-column tibble\n## # A tibble: 26 × 1\n##    values\n##     &lt;dbl&gt;\n##  1    1.1\n##  2    1.2\n##  3    1.3\n##  4    1.4\n##  5    1.5\n##  6    1.6\n##  7    1.7\n##  8    1.8\n##  9    1.9\n## 10    2  \n## # ℹ 16 more rows\n\nclass(tbl) == class(tbl[\"values\"])\n## [1] TRUE TRUE TRUE\n\n\n\n\nThis consistency helps maintain predictable behavior in pipelines and avoids surprises when chaining operations."
+  },
+  {
+    "objectID": "posts/data-frame-vs-tibble/index.html#extract-a-single-column-with",
+    "href": "posts/data-frame-vs-tibble/index.html#extract-a-single-column-with",
+    "title": "\ndata.frame vs tibble\n",
+    "section": "Extract a single column with [\n",
+    "text": "Extract a single column with [\n\nSubetting a single element from a data.frame using [ does not return a data.frame.\n\n# df_subset &lt;- df[, \"letters\"]\n# \n# base::is.data.frame(df_subset)\n# \n# base::class(df_subset)\n# \n# utils::str(df_subset)\n\nConversly, subetting a single element from a tibble using [ returns a tibble.\n\n# tbl_subset &lt;- tbl[, \"letters\"]\n# \n# tibble::is_tibble(tbl_subset)\n# \n# base::class(tbl_subset)\n# \n# utils::str(tbl_subset)"
+  },
+  {
+    "objectID": "posts/data-frame-vs-tibble/index.html#add-a-new-column-using",
+    "href": "posts/data-frame-vs-tibble/index.html#add-a-new-column-using",
+    "title": "\ndata.frame vs tibble\n",
+    "section": "Add a New Column Using $\n",
+    "text": "Add a New Column Using $\n\nAdding a new column to a data.frame using $ will recycle the vector used if its length is less than the number of rows of the data.frame (but assuming that the number of elemnts of the vector is a submultiple of the number of rows of the data.frame).\n\n# df$other_numbers &lt;- 27:28\n# \n# df$other_numbers\n# \n# df\n\nIn general, a tibble does not allow it\n\n# tbl$other_numbers &lt;- 27:28\n\nUnless we want to add a constant column\n\n# tbl$constant_column &lt;- 7\n# \n# tbl$constant_column\n# \n# tbl\n\nNote that if the length of the vector used to define a new column is equal to the number of rows of the tibble, then everything will run smoothly.\n\ntbl$other_numbers &lt;- 27:52\n\ntbl$other_numbers\n##  [1] 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51\n## [26] 52\n\ntbl\n## # A tibble: 26 × 3\n##    letters numbers other_numbers\n##    &lt;chr&gt;     &lt;int&gt;         &lt;int&gt;\n##  1 a             1            27\n##  2 b             2            28\n##  3 c             3            29\n##  4 d             4            30\n##  5 e             5            31\n##  6 f             6            32\n##  7 g             7            33\n##  8 h             8            34\n##  9 i             9            35\n## 10 j            10            36\n## # ℹ 16 more rows"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  }
+]
