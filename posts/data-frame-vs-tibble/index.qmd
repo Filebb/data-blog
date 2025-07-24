@@ -1,5 +1,6 @@
 ---
 title: "`data.frame` vs `tibble`"
+description: "Comparing data.frame and tibble behavior in R: creation, subsetting, printing, and more."
 date: "2025-07-23"
 categories: [R, base::data.frame, tibble::tibble, tibble::tribble]
 editor_options: 
@@ -8,19 +9,23 @@ editor_options:
 
 # Introduction
 
-When working with tabular data in R, you’ll often choose between two structures:
-`data.frame` and `tibble`.
-This post breaks down how to create them, explores their behavior, and explains
-why tibbles are often preferred in modern workflows.
+In R, tabular data is typically stored using either a `data.frame` or a
+`tibble`.  
+While they serve similar purposes, their behavior diverges in ways that affect
+printing, subsetting, and workflow safety.
+
+This post compares their creation and structure, highlights key differences, and
+explains why tibbles are often the preferred choice in modern tidyverse
+workflows.
 
 # Create
 
-Base R provides a data structure, called `data.frame`, to store and manipulate
-tabular data.
+Base R provides the `data.frame` structure for storing and manipulating tabular
+data.  
+A `data.frame` is essentially a list of equal-length vectors, where each vector
+becomes a column.
 
-A `data.frame` is an R `list` of equal-length vectors.
-
-Here’s how to create a simple two-column `data.frame` using base R:
+Here's how to create a structured `data.frame` with five columns:
 
 ```{r}
 df <-
@@ -36,13 +41,11 @@ df <-
   )
 ```
 
-The tidyverse alternative is a `tibble`, a modern version of `data.frame`
-designed to simplify data handling and prevent common pitfalls, like automatic
-conversion of strings to factors or row name behavior.
+Tibbles are the tidyverse alternative to `data.frame`.  
 Tibbles eliminate many of the quirks of base R `data.frame`, making them safer
 and more predictable in data workflows.
 
-And here's the `tibble` equivalent using tidyverse syntax:
+Here’s the `tibble` equivalent using `tibble::tibble()`:
 
 ```{r}
 tbl <-
@@ -75,11 +78,11 @@ base::class(tbl)
 
 Tibbles extend base data-frames by layering two additional classes: `tbl` and
 `tbl_df`.
-This hierarchy enables customized printing, stricter subsetting, and
-compatibility with tidyverse functions, while maintaining full interoperability
-with functions expecting a `data.frame`.
+This class hierarchy enables customized printing, stricter subsetting, and
+compatibility with tidyverse functions, all while remaining fully interoperable
+with functions expecting a plain `data.frame`.
 
-For a more targeted class check, use `base::inherits`:
+You can use inherits() for targeted class checks:
 
 ```{r}
 base::inherits(df, "data.frame")
@@ -93,8 +96,12 @@ base::inherits(tbl, "tbl")
 
 # Structure Comparison
 
-Both `df` and `tbl` are technically `list`s under the hood, but `tibble`s carry
-extra metadata for printing and structure.
+# Structure Comparison
+
+At their core, both `df` and `tbl` are `list`s under the hood, each column is a
+vector, and the object binds those vectors together under a tabular class.
+However, `tibble`s carry extra metadata for printing and structure.
+
 Let’s inspect them:
 
 ```{r}
@@ -143,6 +150,9 @@ Both `data.frame`s and `tibble`s support subsetting with `$`, `[`,
 and `[[`, but they behave differently in edge cases. Tibbles tend to be
 stricter and more predictable, helping catch subtle bugs early.
 
+Let's walk through each subsetting method and compare how data.frame and tibble
+behave under the hood.
+
 ## List Name Extractor `$`
 
 In R, the `$ `operator, formally known as the **list name extractor**, is used
@@ -171,9 +181,9 @@ workflow.
 Note that the common `$` syntax is a syntactic sugar:
 
 ```{r}
-all(base::`$`(df, "values") == df$values)
+identical(base::`$`(df, "values"), df$values)
 
-all(base::`$`(tbl, "values") == tbl$values)
+identical(base::`$`(tbl, "values"), tbl$values)
 ```
 
 ## Partial Matching
@@ -210,7 +220,7 @@ typos and ambiguous references early.
 This constraint reduces hidden bugs and promotes safer, more reliable code
 through clear intent.
 
-## Bracket Subsetting: One-Dimensional
+## Bracket Subsetting with `["colname"]`
 
 When selecting one column with subset operator `[`, both structures preserve
 column names and types, but the returned object matches the source:
@@ -231,9 +241,9 @@ surprises when chaining operations.
 Note that the common `[` syntax is a syntactic sugar:
 
 ```{r}
-all(base::`[`(df, "values") == df["values"])
+identical(base::`[`(df, "values"), df["values"])
 
-all(base::`[`(tbl, "values") == tbl["values"])
+identical(base::`[`(tbl, "values"), tbl["values"])
 ```
 
 Subset operator can be used to select more columns:
@@ -247,13 +257,13 @@ tbl[c("numbers", "letters_upper")]
 A numerical vector with columns position can also be provided:
 
 ```{r}
-all(df["values"] == df[3])
+identical(df["values"], df[3])
 
-all(tbl["values"] == tbl[3])
+identical(tbl["values"], tbl[3])
 
-all(df[c("numbers", "letters_upper")] == df[c(2, 5)])
+identical(df[c("numbers", "letters_upper")], df[c(2, 5)])
 
-all(tbl[c("numbers", "letters_upper")] == tbl[c(2, 5)])
+identical(tbl[c("numbers", "letters_upper")], tbl[c(2, 5)])
 ```
 
 ## Bracket Subsetting with `[ , "colname"]`
@@ -284,7 +294,65 @@ utils::str(tbl[, "values"])
 This behavior reflects tibble’s design philosophy: predictable and
 structure-preserving results, especially useful in tidyverse pipelines.
 
-# Add a New Column Using `$`
+## Extracting Columns with `[[ "colname" ]]` or `[[ position ]]`
+
+The double-bracket operator `[[` is used to extract elements by name or
+position with exact intent. Unlike `[`, which returns a one-column `data.frame`
+or `tibble`, `[[` returns the column as a vector.
+
+```{r}
+df[["values"]] # Returns a vector
+
+tbl[["values"]] # Returns a vector
+```
+
+`[[` supports also numeric indexing:
+
+```{r}
+all(df[["values"]]== df[[3]])
+
+all(df[["values"]] == tbl[[3]])
+```
+
+Contrary to `[`, `[[` only allows extraction of a single element, not multiple
+columns:
+
+```{r}
+#| error: true
+df[[c(1,3)]]  # FALSE
+
+tbl[[c(1,3)]]  # Error: only one element (column) can be extracted
+```
+
+What happens in the `data.frame` case is that when you pass `c(1, 3)` to
+`df[[ ]]`, R doesn't extract multiple columns. Instead, it interprets the whole
+vector as a compound index, which is valid but not intuitive.
+In pratice `df[[c(1, 3)]]`  is equivalent to `df[[1]][3]`:
+
+```{r}
+identical(df[[c(1, 3)]], df[[1]][3])
+```
+
+In tidyverse workflows, `dplyr::pull` is a friendly wrapper around `[[`, with
+added clarity:
+
+```{r}
+df |> dplyr::pull("values")
+
+tbl |> dplyr::pull("values")
+```
+
+Note: `pull` works seamlessly with both `data.frame` and `tibble`.
+
+As with `$` and `[ ]`, the `[[ ]]` operator is syntactic sugar:
+
+```{r}
+all(base::`[[`(df, "values") == df[["values"]])
+
+all(base::`[[`(tbl, "values") == tbl[["values"]])
+```
+
+# Add a New Column Using `$<-`
 
 Adding a new column to a `data.frame` using `$` will recycle the vector used if
 its length is less than the number of rows of the `data.frame` (but assuming
@@ -292,11 +360,11 @@ that the number of elemnts of the vector is a submultiple of the number of rows
 of the `data.frame`).
 
 ```{r}
-# df$other_numbers <- 27:28
-# 
-# df$other_numbers
-# 
-# df
+df$more_numbers <- 27:28
+
+df$more_numbers
+
+df
 ```
 
 In general, a `tibble` does not allow it
@@ -304,35 +372,15 @@ In general, a `tibble` does not allow it
 ```{r}
 #| error: true
 
-# tbl$other_numbers <- 27:28
+tbl$more_numbers <- 27:28
 ```
 
-Unless we want to add a constant column
+Unless we want to recycle a vector of length 1 or of length equal to the number
+of rows:
 
 ```{r}
-# tbl$constant_column <- 7
-# 
-# tbl$constant_column
-# 
-# tbl
-```
-
-Note that if the length of the vector used to define a new column is equal to
-the number of rows of the tibble, then everything will run smoothly.
-
-```{r}
-#| echo: false
-tbl <-
-  tibble::tibble(
-    letters = letters,
-    numbers = 1:26
-  )
-```
-
-```{r}
-tbl$other_numbers <- 27:52
-
-tbl$other_numbers
+tbl$more_numbers <- 27:52 # Length 26 — accepted
+tbl$constant <- 53        # Length 1 — accepted
 
 tbl
 ```
