@@ -1,86 +1,240 @@
 ---
 title: "`data.frame` vs `tibble`"
-date: "2025-04-15"
+date: "2025-07-23"
 categories: [R, base::data.frame, tibble::tibble, tibble::tribble]
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Create
 
+::: {.panel-tabset}
+## `data.frame`
+
 Base R provides a data structure, called `data.frame`, to store and manipulate
 tabular data.
 
-A `data.frame` is a `list` (a R list!) of equal-length vectors.
+A `data.frame` is an R `list` of equal-length vectors.
 
-Creating a `data.frame` is as easy as
+Here’s how to create a simple two-column `data.frame` using base R:
 
 ```{r}
 df <-
   base::data.frame(
-    letters = letters,
-    numbers = 1:26
+    is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
+                      FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      FALSE, FALSE),
+    numbers       = 1:26,
+    values        = seq(1.1, by = 0.1, length.out = 26),
+    letters_lower = letters, # Built-in vector: "a" to "z"
+    letters_upper = LETTERS  # Built-in vector: "A" to "Z"
   )
 ```
 
-A `tibble` is the tidyverse version of `data.frame`.
+## `tibble`
 
-Using similar syntax we can create a `tibble`:
+The tidyverse alternative is a `tibble`, a modern version of `data.frame`
+designed to simplify data handling and prevent common pitfalls, like automatic
+conversion of strings to factors or row name behavior.
+Tibbles eliminate many of the quirks of base R `data.frame`s, making them safer
+and more predictable in data workflows.
+
+And here's the `tibble` equivalent using tidyverse syntax:
 
 ```{r}
 tbl <-
   tibble::tibble(
-    letters = letters,
-    numbers = 1:26
+    is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
+                      FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      FALSE, FALSE),
+    numbers       = 1:26,
+    values        = seq(1.1, by = 0.1, length.out = 26),
+    letters_lower = letters,
+    letters_upper = LETTERS
   )
 ```
+:::
 
-# Differences
+While both structures store the same data, their behavior diverges in subtle but
+important ways. Let's look at how they differ when printed, subsetted, or used
+in a pipeline.
 
-## Print
+# Class
 
-The first difference between `data.frame` and `tibble` is about printing:
-tibbles have a print method that shows only the first 10 rows, and all the
-columns that fit on screen. This makes it much easier to work with large data.
-In addition to its name, each column reports its type.
+Although `df` and `tbl` store the same data, they belong to different object
+classes:
+
+```{r}
+class(df)
+
+class(tbl)
+```
+
+Tibbles extend base data.frames by layering two additional classes: `tbl` and
+`tbl_df`. This hierarchy enables customized printing, stricter subsetting, and
+compatibility with tidyverse functions, while maintaining full interoperability
+with functions expecting a `data.frame`.
+
+For a more targeted class check, use `inherits()`:
+
+```{r}
+inherits(df, "data.frame")
+
+inherits(tbl, "data.frame")
+
+inherits(df, "tbl")
+
+inherits(tbl, "tbl")
+```
+
+# Structure Comparison
+
+Both `df` and `tbl` are technically `list`s under the hood, but `tibble`s carry
+extra metadata for printing and structure. Let’s inspect them:
+
+```{r}
+typeof(df)
+
+typeof(tbl)
+```
+
+Using `typeof()` they appear identical, both are fundamentally lists. But
+`str()` reveals more subtle differences:
+
+```{r}
+str(df)
+
+str(tbl)
+```
+
+This reinforces the idea that tibbles are still lists with class `data.frame`,
+but their extra class layers change how they behave and display.
+
+# Print
+
+The first thing you’ll notice is how differently `data.frame`s and `tibble`s
+print.
+Tibbles have a print method that shows only the first 10 rows, and all the
+columns that fit on screen.
+This makes working with large datasets much easier.
+Each column in a tibble includes a compact type annotation, such as:
+
+- `<lgl>` — logical
+- `<int>` — integer
+- `<dbl>` — double
+- `<chr>` — character
+
+Let’s print both and compare their outputs.
+
+::: {.panel-tabset}
+## `data.frame`
 
 ```{r}
 df
+```
+
+## `tibble`
+
+```{r}
 tbl
 ```
+:::
 
+# Subset
 
-## Subset and Partial Matching
+Both `data.frame`s and `tibble`s support subsetting with `$`, `[`,
+and `[[`, but they behave differently in edge cases. Tibbles tend to be
+stricter and more predictable, helping catch subtle bugs early.
 
-The second difference is about subsetting. Data frames allow partial matching
-for column names:
+## List Name Extractor `$`
+
+In R, the `$ `operator, formally known as the **list name extractor**, is used
+to access elements by name from objects that behave like `list`s, such as
+`data.frame`s and `tibble`s.
+
+It’s a binary operator: writing `x$name` is syntactic sugar for
+`"$"(x, "name")`. You can confirm this by inspecting:
+
 
 ```{r}
-df$let
+df$values
+`$`(df, "values")
+
+tbl$values
+`$`(tbl, "values")
 ```
 
-On the other hand a tibble is stricter and does not allow partial matching:
+In both structures, `$` returns the column as a vector. But if the column name
+doesn’t exist:
 
 ```{r}
-tbl$let
+df$missing_column   # Returns NULL silently
+
+tbl$missing_column  # Warning: unknown column, returns NULL
 ```
 
-This can be very helpful, especially when debugging code, because the message
-tells use where the problem is. Look at what happens in the following example:
+Tibbles are stricter—they issue a warning when a column is missing. This makes
+them safer for debugging and helps catch typos or mismatched names early in the
+workflow.
+
+## Partial Matching
+
+Unlike `tibble`s, base R `data.frame`s allow partial matching when accessing
+column names:
 
 ```{r}
-df2 <- base::data.frame(
-  letters_lower = letters,
-  letters_upper = LETTERS,
-  numbers = 1:26
-)
+df$val # Matches 'values'
 
-df2$let
+tbl$val # Warning: no such column, returns NULL
 ```
 
-Since more than one column name partially matches the string 'let', subsetting
-returns `NULL` without generating a warning. It would be more difficult to debug
-a bigger chunk of code if this technique is used. Therefore it’s advisable to
-avoid partial matching when subsetting. Tibbles are good because they forbid us
-to use it.
+This stricter behavior is often safer. Consider the following example:
+
+```{r}
+df$let # Ambiguous: matches multiple columns, returns NULL (silently!)
+
+tbl$let # Warning: requires exact match, returns NULL
+```
+
+In `data.frame`, `$let` silently returns `NULL`, since multiple columns begin
+with `'let'`. No warning is issued, making it easy to miss, especially inside
+larger pipelines or wrapped functions.
+
+Tibbles, by contrast, enforce exact matching.
+They generate a warning when the column name isn’t found, helping you catch
+typos and ambiguous references early.
+This constraint reduces hidden bugs and promotes safer, more reliable code
+through clear intent.
+
+## Single Brackets `[ ]`
+
+When selecting one column with single brackets, both structures preserve
+column names and types, but the returned object matches the source:
+
+::: {.panel-tabset}
+## `data.frame`
+
+```{r}
+df["values"] # Returns a one-column data.frame
+
+class(df) == class(df["values"])
+```
+
+## `tibble`
+
+```{r}
+tbl["values"] # Returns a one-column tibble
+
+class(tbl) == class(tbl["values"])
+```
+:::
+
+This consistency helps maintain predictable behavior in pipelines and avoids
+surprises when chaining operations.
+
+
 
 ## Extract a single column with `[`
 
@@ -88,26 +242,26 @@ Subetting a single element from a `data.frame` using `[` does not return a
 `data.frame`.
 
 ```{r}
-df_subset <- df[, "letters"]
-
-base::is.data.frame(df_subset)
-
-base::class(df_subset)
-
-utils::str(df_subset)
+# df_subset <- df[, "letters"]
+# 
+# base::is.data.frame(df_subset)
+# 
+# base::class(df_subset)
+# 
+# utils::str(df_subset)
 ```
 
 Conversly, subetting a single element from a `tibble` using `[` returns a
 `tibble`.
 
 ```{r}
-tbl_subset <- tbl[, "letters"]
-
-tibble::is_tibble(tbl_subset)
-
-base::class(tbl_subset)
-
-utils::str(tbl_subset)
+# tbl_subset <- tbl[, "letters"]
+# 
+# tibble::is_tibble(tbl_subset)
+# 
+# base::class(tbl_subset)
+# 
+# utils::str(tbl_subset)
 ```
 
 ## Add a New Column Using `$`
@@ -118,28 +272,29 @@ that the number of elemnts of the vector is a submultiple of the number of rows
 of the `data.frame`).
 
 ```{r}
-df$other_numbers <- 27:28
-
-df$other_numbers
-
-df
+# df$other_numbers <- 27:28
+# 
+# df$other_numbers
+# 
+# df
 ```
 
 In general, a `tibble` does not allow it
 
 ```{r}
 #| error: true
-tbl$other_numbers <- 27:28
+
+# tbl$other_numbers <- 27:28
 ```
 
 Unless we want to add a constant column
 
 ```{r}
-tbl$constant_column <- 7
-
-tbl$constant_column
-
-tbl
+# tbl$constant_column <- 7
+# 
+# tbl$constant_column
+# 
+# tbl
 ```
 
 Note that if the length of the vector used to define a new column is equal to
