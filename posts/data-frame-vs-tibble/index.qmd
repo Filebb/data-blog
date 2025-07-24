@@ -6,10 +6,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Create
+# Introduction
 
-::: {.panel-tabset}
-## `data.frame`
+When working with tabular data in R, you’ll often choose between two structures:
+`data.frame` and `tibble`.
+This post breaks down how to create them, explores their behavior, and explains
+why tibbles are often preferred in modern workflows.
+
+# Create
 
 Base R provides a data structure, called `data.frame`, to store and manipulate
 tabular data.
@@ -32,12 +36,10 @@ df <-
   )
 ```
 
-## `tibble`
-
 The tidyverse alternative is a `tibble`, a modern version of `data.frame`
 designed to simplify data handling and prevent common pitfalls, like automatic
 conversion of strings to factors or row name behavior.
-Tibbles eliminate many of the quirks of base R `data.frame`s, making them safer
+Tibbles eliminate many of the quirks of base R `data.frame`, making them safer
 and more predictable in data workflows.
 
 And here's the `tibble` equivalent using tidyverse syntax:
@@ -55,7 +57,6 @@ tbl <-
     letters_upper = LETTERS
   )
 ```
-:::
 
 While both structures store the same data, their behavior diverges in subtle but
 important ways. Let's look at how they differ when printed, subsetted, or used
@@ -67,46 +68,48 @@ Although `df` and `tbl` store the same data, they belong to different object
 classes:
 
 ```{r}
-class(df)
+base::class(df)
 
-class(tbl)
+base::class(tbl)
 ```
 
-Tibbles extend base data.frames by layering two additional classes: `tbl` and
-`tbl_df`. This hierarchy enables customized printing, stricter subsetting, and
+Tibbles extend base data-frames by layering two additional classes: `tbl` and
+`tbl_df`.
+This hierarchy enables customized printing, stricter subsetting, and
 compatibility with tidyverse functions, while maintaining full interoperability
 with functions expecting a `data.frame`.
 
-For a more targeted class check, use `inherits()`:
+For a more targeted class check, use `base::inherits`:
 
 ```{r}
-inherits(df, "data.frame")
+base::inherits(df, "data.frame")
 
-inherits(tbl, "data.frame")
+base::inherits(tbl, "data.frame")
 
-inherits(df, "tbl")
+base::inherits(df, "tbl")
 
-inherits(tbl, "tbl")
+base::inherits(tbl, "tbl")
 ```
 
 # Structure Comparison
 
 Both `df` and `tbl` are technically `list`s under the hood, but `tibble`s carry
-extra metadata for printing and structure. Let’s inspect them:
+extra metadata for printing and structure.
+Let’s inspect them:
 
 ```{r}
-typeof(df)
+base::typeof(df)
 
-typeof(tbl)
+base::typeof(tbl)
 ```
 
-Using `typeof()` they appear identical, both are fundamentally lists. But
-`str()` reveals more subtle differences:
+Using `typeof()` they appear identical.
+But `str()` reveals more subtle differences:
 
 ```{r}
-str(df)
+utils::str(df)
 
-str(tbl)
+utils::str(tbl)
 ```
 
 This reinforces the idea that tibbles are still lists with class `data.frame`,
@@ -114,7 +117,7 @@ but their extra class layers change how they behave and display.
 
 # Print
 
-The first thing you’ll notice is how differently `data.frame`s and `tibble`s
+The first thing you’ll notice is how differently `data.frame` and `tibble`
 print.
 Tibbles have a print method that shows only the first 10 rows, and all the
 columns that fit on screen.
@@ -128,19 +131,11 @@ Each column in a tibble includes a compact type annotation, such as:
 
 Let’s print both and compare their outputs.
 
-::: {.panel-tabset}
-## `data.frame`
-
 ```{r}
 df
-```
 
-## `tibble`
-
-```{r}
 tbl
 ```
-:::
 
 # Subset
 
@@ -154,16 +149,10 @@ In R, the `$ `operator, formally known as the **list name extractor**, is used
 to access elements by name from objects that behave like `list`s, such as
 `data.frame`s and `tibble`s.
 
-It’s a binary operator: writing `x$name` is syntactic sugar for
-`"$"(x, "name")`. You can confirm this by inspecting:
-
-
 ```{r}
 df$values
-`$`(df, "values")
 
 tbl$values
-`$`(tbl, "values")
 ```
 
 In both structures, `$` returns the column as a vector. But if the column name
@@ -179,6 +168,14 @@ Tibbles are stricter—they issue a warning when a column is missing. This makes
 them safer for debugging and helps catch typos or mismatched names early in the
 workflow.
 
+Note that the common `$` syntax is a syntactic sugar:
+
+```{r}
+all(base::`$`(df, "values") == df$values)
+
+all(base::`$`(tbl, "values") == tbl$values)
+```
+
 ## Partial Matching
 
 Unlike `tibble`s, base R `data.frame`s allow partial matching when accessing
@@ -190,17 +187,22 @@ df$val # Matches 'values'
 tbl$val # Warning: no such column, returns NULL
 ```
 
-This stricter behavior is often safer. Consider the following example:
+Base R’s partial matching stems from legacy flexibility, allowing quick
+exploratory coding.
+But in production workflows, this flexibility can introduce silent errors.
+Tibbles' stricter behavior is generally safer.
+Consider the following example:
 
 ```{r}
-df$let # Ambiguous: matches multiple columns, returns NULL (silently!)
+df$let # Ambiguous: matches multiple columns, returns NULL silently
 
 tbl$let # Warning: requires exact match, returns NULL
 ```
 
 In `data.frame`, `$let` silently returns `NULL`, since multiple columns begin
-with `'let'`. No warning is issued, making it easy to miss, especially inside
-larger pipelines or wrapped functions.
+with `'let'`.
+No warning is issued, making it easy to miss, especially inside larger pipelines
+or wrapped functions.
 
 Tibbles, by contrast, enforce exact matching.
 They generate a warning when the column name isn’t found, helping you catch
@@ -208,63 +210,81 @@ typos and ambiguous references early.
 This constraint reduces hidden bugs and promotes safer, more reliable code
 through clear intent.
 
-## Single Brackets `[ ]`
+## Bracket Subsetting: One-Dimensional
 
-When selecting one column with single brackets, both structures preserve
+When selecting one column with subset operator `[`, both structures preserve
 column names and types, but the returned object matches the source:
-
-::: {.panel-tabset}
-## `data.frame`
 
 ```{r}
 df["values"] # Returns a one-column data.frame
 
 class(df) == class(df["values"])
-```
 
-## `tibble`
-
-```{r}
 tbl["values"] # Returns a one-column tibble
 
 class(tbl) == class(tbl["values"])
 ```
-:::
 
 This consistency helps maintain predictable behavior in pipelines and avoids
 surprises when chaining operations.
 
-
-
-## Extract a single column with `[`
-
-Subetting a single element from a `data.frame` using `[` does not return a
-`data.frame`.
+Note that the common `[` syntax is a syntactic sugar:
 
 ```{r}
-# df_subset <- df[, "letters"]
-# 
-# base::is.data.frame(df_subset)
-# 
-# base::class(df_subset)
-# 
-# utils::str(df_subset)
+all(base::`[`(df, "values") == df["values"])
+
+all(base::`[`(tbl, "values") == tbl["values"])
 ```
 
-Conversly, subetting a single element from a `tibble` using `[` returns a
-`tibble`.
+Subset operator can be used to select more columns:
 
 ```{r}
-# tbl_subset <- tbl[, "letters"]
-# 
-# tibble::is_tibble(tbl_subset)
-# 
-# base::class(tbl_subset)
-# 
-# utils::str(tbl_subset)
+df[c("numbers", "letters_upper")]
+
+tbl[c("numbers", "letters_upper")]
 ```
 
-## Add a New Column Using `$`
+A numerical vector with columns position can also be provided:
+
+```{r}
+all(df["values"] == df[3])
+
+all(tbl["values"] == tbl[3])
+
+all(df[c("numbers", "letters_upper")] == df[c(2, 5)])
+
+all(tbl[c("numbers", "letters_upper")] == tbl[c(2, 5)])
+```
+
+## Bracket Subsetting with `[ , "colname"]`
+
+When subsetting with two indices, i.e. `df[, "values"]` we’re instructing R to
+return all rows and a named column by character reference. While this syntax
+appears identical across `data.frame` and `tibble`, the behavior differs in a
+meaningful way:
+
+```{r}
+df[, "values"] # Returns a vector (column extracted)
+
+base::is.data.frame(df[, "values"])
+
+base::class(df[, "values"])
+
+utils::str(df[, "values"])
+
+tbl[, "values"] # Returns a tibble (preserves tbl_df structure)
+
+tibble::is_tibble(tbl[, "values"])
+
+base::class(tbl[, "values"])
+
+utils::str(tbl[, "values"])
+```
+
+This behavior reflects tibble’s design philosophy: predictable and
+structure-preserving results, especially useful in tidyverse pipelines.
+
+# Add a New Column Using `$`
 
 Adding a new column to a `data.frame` using `$` will recycle the vector used if
 its length is less than the number of rows of the `data.frame` (but assuming
@@ -317,11 +337,21 @@ tbl$other_numbers
 tbl
 ```
 
-# Create by Row
+# Summary of Differences
 
-A useful function coming from the `tibble` package is `tribble` which allow us
-to define a `tibble` by row. This is useful for small tables of data where
-readability is important.
+| Feature          | `data.frame`            | `tibble`                         |
+|:-----------------|:------------------------|:---------------------------------|
+| Class            | `data.frame`            | `tbl_df`, `tbl`, `data.frame`    |
+| Printing         | Entire object           | First 10 rows + compact metadata |
+| `$` with typo    | Returns `NULL` silently | Returns `NULL` with warning      |
+| Partial Matching | Allowed                 | Disallowed                       |
+| Subset `[`       | Returns `data.frame`    | Returns `tibble`                 |
+
+# Create by Row: tribble()
+
+The `tibble::tribble()` function ("transposed tibble") offers a readable,
+row-wise syntax that makes small tables clearer, especially in documentation,
+examples, and teaching material.
 
 ```{r}
 tibble::tribble(
@@ -332,7 +362,37 @@ tibble::tribble(
 )
 ```
 
-There are some workarounds to create a `data.frame` by row, however they do not
+Advantages:
+
+- Column headers preceded by `~`: Visually distinguishes variables.
+
+- Row-wise entry: Mirrors how we often conceptualize tables.
+
+- Safe type inference: Similar to `tibble()`, avoids surprises.
+
+Base R doesn't offer a native row-wise constructor for `data.frame`, and there
+are not simple workarounds (as far as I know!). Base R can construct row-wise
+structures using `rbind`, but these have major limitations:
+
+```{r}
+base::rbind(
+  c("a", 1),
+  c("b", 2),
+  c("c", 3)
+)
+```
+
+This returns a character `matrix` not a `data.frame`. Type information is lost
+due to coercion:
+
+```{r}
+base::rbind(
+  c("a", 1),
+  c("b", 2),
+  c("c", 3)
+) |>
+  typeof()
+```
 
 # References
 
