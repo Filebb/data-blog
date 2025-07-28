@@ -499,3 +499,5 @@ typeof(mat)
 
 - [Tibble](https://posit.co/blog/tibble-1-0-0/) from Posit blog
 
+- [The Trouble with Tibbles](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/) from Jumping Rivers
+
