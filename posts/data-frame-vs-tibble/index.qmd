@@ -386,15 +386,48 @@ tbl
 Also the `$<-` assignment is syntactic sugar:
 
 ```{r}
-# is equivalent to:
-`$<-`(df, "more_numbers", 27:28)
+# let's restart from the original df
+df <-
+  base::data.frame(
+    is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
+                      FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      FALSE, FALSE),
+    numbers       = 1:26,
+    values        = seq(1.1, by = 0.1, length.out = 26),
+    letters_lower = letters, # Built-in vector: "a" to "z"
+    letters_upper = LETTERS  # Built-in vector: "A" to "Z"
+  )
 
-# Similarly for tibbles:
-`$<-`(tbl, "constant", 53)
+# create a new column
+`$<-`(df, "another_constant", 54)
+
+# let's restart from the original tbl
+tbl <-
+  tibble::tibble(
+    is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
+                      FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
+                      FALSE, FALSE),
+    numbers       = 1:26,
+    values        = seq(1.1, by = 0.1, length.out = 26),
+    letters_lower = letters,
+    letters_upper = LETTERS
+  )
+
+# similarly for tibbles
+`$<-`(tbl, "another_constant", 54)
 ```
 
 Note that Using `$<-` in this manner returns a modified copy but does not alter
 the original df or tbl object unless explicitly reassigned.
+
+```{r}
+df
+
+tbl
+```
+
 
 # Summary of Differences
 
