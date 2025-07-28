@@ -495,4 +495,7 @@ typeof(mat)
 
 - [Tibble](https://tibble.tidyverse.org/index.html) package documentation
 
+- [Help Manual](https://tidyverse.r-universe.dev/tibble/doc/manual.html) from r-universe.dev
+
 - [Tibble](https://posit.co/blog/tibble-1-0-0/) from Posit blog
+
