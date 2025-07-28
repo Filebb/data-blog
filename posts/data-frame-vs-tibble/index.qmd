@@ -335,9 +335,9 @@ In tidyverse workflows, `dplyr::pull` is a friendly wrapper around `[[`, with
 added clarity:
 
 ```{r}
-df |> dplyr::pull("values")
+dplyr::pull(df, "values")
 
-tbl |> dplyr::pull("values")
+dplyr::pull(tbl, "values")
 ```
 
 Note: `pull` works seamlessly with both `data.frame` and `tibble`.
@@ -475,23 +475,20 @@ are not simple workarounds (as far as I know!). Base R can construct row-wise
 structures using `rbind`, but these have major limitations:
 
 ```{r}
-base::rbind(
+mat <- base::rbind(
   c("a", 1),
   c("b", 2),
   c("c", 3)
 )
+
+mat
 ```
 
 This returns a character `matrix` not a `data.frame`. Type information is lost
 due to coercion:
 
 ```{r}
-base::rbind(
-  c("a", 1),
-  c("b", 2),
-  c("c", 3)
-) |>
-  typeof()
+typeof(mat)
 ```
 
 # References
