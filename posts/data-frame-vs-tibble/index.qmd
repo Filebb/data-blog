@@ -1,7 +1,7 @@
 ---
 title: "`data.frame` vs `tibble`"
 description: "Comparing data.frame and tibble behavior in R: creation, subsetting, printing, and more."
-date: "2025-07-23"
+date: "2025-07-28"
 categories: [R, base::data.frame, tibble::tibble, tibble::tribble]
 editor_options: 
   chunk_output_type: console
