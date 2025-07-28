@@ -137,9 +137,9 @@ Each column in a tibble includes a compact type annotation, such as:
 Let’s print both and compare their outputs.
 
 ```{r}
-df
+dplyr::glimpse(df)
 
-tbl
+dplyr::glimpse(tbl)
 ```
 
 # Subset
@@ -362,7 +362,7 @@ df$more_numbers <- 27:28
 
 df$more_numbers
 
-df
+dplyr::glimpse(df)
 ```
 
 In general, a `tibble` does not allow it
@@ -380,7 +380,7 @@ of rows:
 tbl$more_numbers <- 27:52 # Length 26 — accepted
 tbl$constant <- 53        # Length 1 — accepted
 
-tbl
+dplyr::glimpse(tbl)
 ```
 
 Also the `$<-` assignment is syntactic sugar:
@@ -423,9 +423,9 @@ Note that Using `$<-` in this manner returns a modified copy but does not alter
 the original df or tbl object unless explicitly reassigned.
 
 ```{r}
-df
+dplyr::glimpse(df)
 
-tbl
+dplyr::glimpse(tbl)
 ```
 
 
