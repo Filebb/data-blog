@@ -4,7 +4,14 @@
     "href": "index.html",
     "title": "Data Blog",
     "section": "",
-    "text": "data.frame vs tibble\n\n\n\nR\n\nbase::data.frame\n\ntibble::tibble\n\ntibble::tribble\n\n\n\nComparing data.frame and tibble behavior in R: creation, subsetting, printing, and more.\n\n\n\n\n\nJul 23, 2025\n\n\nfilebb\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nApr 11, 2025\n\n\nTristan O’Malley\n\n\n\n\n\nNo matching items"
+    "text": "data.frame vs tibble\n\n\n\nR\n\nbase::data.frame\n\ntibble::tibble\n\ntibble::tribble\n\n\n\nComparing data.frame and tibble behavior in R: creation, subsetting, printing, and more.\n\n\n\n\n\nJul 28, 2025\n\n\nfilebb\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
   },
   {
     "objectID": "posts/data-frame-vs-tibble/index.html",
@@ -47,19 +54,5 @@
     "title": "\ndata.frame vs tibble\n",
     "section": "Extracting Columns with [[ \"colname\" ]] or [[ position ]]\n",
     "text": "Extracting Columns with [[ \"colname\" ]] or [[ position ]]\n\nThe double-bracket operator [[ is used to extract elements by name or position with exact intent. Unlike [, which returns a one-column data.frame or tibble, [[ returns the column as a vector.\n\ndf[[\"values\"]] # Returns a vector\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\ntbl[[\"values\"]] # Returns a vector\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\n[[ supports also numeric indexing:\n\nall(df[[\"values\"]]== df[[3]])\n## [1] TRUE\n\nall(df[[\"values\"]] == tbl[[3]])\n## [1] TRUE\n\nContrary to [, [[ only allows extraction of a single element, not multiple columns:\n\ndf[[c(1,3)]]  # FALSE\n## [1] FALSE\n\ntbl[[c(1,3)]]  # Error: only one element (column) can be extracted\n## Error:\n## ! The `j` argument of `[[.tbl_df()` can't be a vector of length 2 as of\n##   tibble 3.0.0.\n## ℹ Recursive subsetting is deprecated for tibbles.\n\nWhat happens in the data.frame case is that when you pass c(1, 3) to df[[ ]], R doesn’t extract multiple columns. Instead, it interprets the whole vector as a compound index, which is valid but not intuitive. In pratice df[[c(1, 3)]] is equivalent to df[[1]][3]:\n\nidentical(df[[c(1, 3)]], df[[1]][3])\n## [1] TRUE\n\nIn tidyverse workflows, dplyr::pull is a friendly wrapper around [[, with added clarity:\n\ndf |&gt; dplyr::pull(\"values\")\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\ntbl |&gt; dplyr::pull(\"values\")\n##  [1] 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9\n## [20] 3.0 3.1 3.2 3.3 3.4 3.5 3.6\n\nNote: pull works seamlessly with both data.frame and tibble.\nAs with $ and [ ], the [[ ]] operator is syntactic sugar:\n\nall(base::`[[`(df, \"values\") == df[[\"values\"]])\n## [1] TRUE\n\nall(base::`[[`(tbl, \"values\") == tbl[[\"values\"]])\n## [1] TRUE"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this blog"
-  },
-  {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   }
 ]
