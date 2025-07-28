@@ -386,7 +386,6 @@ tbl
 Also the `$<-` assignment is syntactic sugar:
 
 ```{r}
-df$more_numbers <- 27:28
 # is equivalent to:
 `$<-`(df, "more_numbers", 27:28)
 
@@ -394,6 +393,8 @@ df$more_numbers <- 27:28
 `$<-`(tbl, "constant", 53)
 ```
 
+Note that Using `$<-` in this manner returns a modified copy but does not alter
+the original df or tbl object unless explicitly reassigned.
 
 # Summary of Differences
 
