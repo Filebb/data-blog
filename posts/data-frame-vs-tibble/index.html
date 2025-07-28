@@ -181,7 +181,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#create" id="toc-create" class="nav-link" data-scroll-target="#create">Create</a></li>
   <li><a href="#class" id="toc-class" class="nav-link" data-scroll-target="#class">Class</a></li>
   <li><a href="#structure-comparison" id="toc-structure-comparison" class="nav-link" data-scroll-target="#structure-comparison">Structure Comparison</a></li>
-  <li><a href="#structure-comparison-1" id="toc-structure-comparison-1" class="nav-link" data-scroll-target="#structure-comparison-1">Structure Comparison</a></li>
   <li><a href="#print" id="toc-print" class="nav-link" data-scroll-target="#print">Print</a></li>
   <li>
 <a href="#subset" id="toc-subset" class="nav-link" data-scroll-target="#subset">Subset</a>
@@ -195,7 +194,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
   <li><a href="#add-a-new-column-using--" id="toc-add-a-new-column-using--" class="nav-link" data-scroll-target="#add-a-new-column-using--">Add a New Column Using <code>$&lt;-</code></a></li>
   <li><a href="#summary-of-differences" id="toc-summary-of-differences" class="nav-link" data-scroll-target="#summary-of-differences">Summary of Differences</a></li>
-  <li><a href="#create-by-row-tribble" id="toc-create-by-row-tribble" class="nav-link" data-scroll-target="#create-by-row-tribble">Create by Row: tribble()</a></li>
+  <li><a href="#create-by-row-tribble" id="toc-create-by-row-tribble" class="nav-link" data-scroll-target="#create-by-row-tribble">Create by Row: <code>tribble()</code></a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></nav>
     </div>
@@ -263,7 +262,6 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 <span><span class="co">## [1] TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="structure-comparison" class="level1"><h1>Structure Comparison</h1>
-</section><section id="structure-comparison-1" class="level1"><h1>Structure Comparison</h1>
 <p>At their core, both <code>df</code> and <code>tbl</code> are <code>list</code>s under the hood, each column is a vector, and the object binds those vectors together under a tabular class. However, <code>tibble</code>s carry extra metadata for printing and structure.</p>
 <p>Let’s inspect them:</p>
 <div class="cell">
@@ -701,23 +699,75 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 <span><span class="co">## 10 FALSE         10    2   j             J                       36       53</span></span>
 <span><span class="co">## # ℹ 16 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Also the <code>$&lt;-</code> assignment is syntactic sugar:</p>
+<div class="cell">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">$</span><span class="va">more_numbers</span> <span class="op">&lt;-</span> <span class="fl">27</span><span class="op">:</span><span class="fl">28</span></span>
+<span><span class="co"># is equivalent to:</span></span>
+<span><span class="fu">`$&lt;-`</span><span class="op">(</span><span class="va">df</span>, <span class="st">"more_numbers"</span>, <span class="fl">27</span><span class="op">:</span><span class="fl">28</span><span class="op">)</span></span>
+<span><span class="co">##    is_vowel numbers values letters_lower letters_upper more_numbers</span></span>
+<span><span class="co">## 1      TRUE       1    1.1             a             A           27</span></span>
+<span><span class="co">## 2     FALSE       2    1.2             b             B           28</span></span>
+<span><span class="co">## 3     FALSE       3    1.3             c             C           27</span></span>
+<span><span class="co">## 4     FALSE       4    1.4             d             D           28</span></span>
+<span><span class="co">## 5      TRUE       5    1.5             e             E           27</span></span>
+<span><span class="co">## 6     FALSE       6    1.6             f             F           28</span></span>
+<span><span class="co">## 7     FALSE       7    1.7             g             G           27</span></span>
+<span><span class="co">## 8     FALSE       8    1.8             h             H           28</span></span>
+<span><span class="co">## 9      TRUE       9    1.9             i             I           27</span></span>
+<span><span class="co">## 10    FALSE      10    2.0             j             J           28</span></span>
+<span><span class="co">## 11    FALSE      11    2.1             k             K           27</span></span>
+<span><span class="co">## 12    FALSE      12    2.2             l             L           28</span></span>
+<span><span class="co">## 13    FALSE      13    2.3             m             M           27</span></span>
+<span><span class="co">## 14    FALSE      14    2.4             n             N           28</span></span>
+<span><span class="co">## 15     TRUE      15    2.5             o             O           27</span></span>
+<span><span class="co">## 16    FALSE      16    2.6             p             P           28</span></span>
+<span><span class="co">## 17    FALSE      17    2.7             q             Q           27</span></span>
+<span><span class="co">## 18    FALSE      18    2.8             r             R           28</span></span>
+<span><span class="co">## 19    FALSE      19    2.9             s             S           27</span></span>
+<span><span class="co">## 20    FALSE      20    3.0             t             T           28</span></span>
+<span><span class="co">## 21     TRUE      21    3.1             u             U           27</span></span>
+<span><span class="co">## 22    FALSE      22    3.2             v             V           28</span></span>
+<span><span class="co">## 23    FALSE      23    3.3             w             W           27</span></span>
+<span><span class="co">## 24    FALSE      24    3.4             x             X           28</span></span>
+<span><span class="co">## 25    FALSE      25    3.5             y             Y           27</span></span>
+<span><span class="co">## 26    FALSE      26    3.6             z             Z           28</span></span>
+<span></span>
+<span><span class="co"># Similarly for tibbles:</span></span>
+<span><span class="fu">`$&lt;-`</span><span class="op">(</span><span class="va">tbl</span>, <span class="st">"constant"</span>, <span class="fl">53</span><span class="op">)</span></span>
+<span><span class="co">## # A tibble: 26 × 7</span></span>
+<span><span class="co">##    is_vowel numbers values letters_lower letters_upper more_numbers constant</span></span>
+<span><span class="co">##    &lt;lgl&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;                &lt;int&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">##  1 TRUE           1    1.1 a             A                       27       53</span></span>
+<span><span class="co">##  2 FALSE          2    1.2 b             B                       28       53</span></span>
+<span><span class="co">##  3 FALSE          3    1.3 c             C                       29       53</span></span>
+<span><span class="co">##  4 FALSE          4    1.4 d             D                       30       53</span></span>
+<span><span class="co">##  5 TRUE           5    1.5 e             E                       31       53</span></span>
+<span><span class="co">##  6 FALSE          6    1.6 f             F                       32       53</span></span>
+<span><span class="co">##  7 FALSE          7    1.7 g             G                       33       53</span></span>
+<span><span class="co">##  8 FALSE          8    1.8 h             H                       34       53</span></span>
+<span><span class="co">##  9 TRUE           9    1.9 i             I                       35       53</span></span>
+<span><span class="co">## 10 FALSE         10    2   j             J                       36       53</span></span>
+<span><span class="co">## # ℹ 16 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section><section id="summary-of-differences" class="level1"><h1>Summary of Differences</h1>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 35%">
-<col style="width: 38%">
+<col style="width: 31%">
+<col style="width: 33%">
+<col style="width: 34%">
 </colgroup>
 <thead><tr class="header">
 <th>Feature</th>
-<th>data.frame</th>
-<th>tibble</th>
+<th><code>data.frame</code></th>
+<th><code>tibble</code></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td>Class structure</td>
-<td>data.frame</td>
-<td>tbl_df, tbl, data.frame</td>
+<td><code>data.frame</code></td>
+<td>
+<code>tbl_df</code>, <code>tbl</code>, <code>data.frame</code>
+</td>
 </tr>
 <tr class="even">
 <td>Printing</td>
@@ -725,9 +775,10 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 <td>First 10 rows, compact column metadata</td>
 </tr>
 <tr class="odd">
-<td>$ with typo</td>
-<td>Returns NULL silently</td>
-<td>Returns NULL with warning</td>
+<td>
+<code>$</code> with typo</td>
+<td>Returns <code>NULL</code> silently</td>
+<td>Returns <code>NULL</code> with warning</td>
 </tr>
 <tr class="even">
 <td>Partial matching</td>
@@ -735,60 +786,64 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 <td>Disallowed</td>
 </tr>
 <tr class="odd">
-<td>$ access</td>
+<td>
+<code>$</code> access</td>
 <td>Returns column as vector</td>
 <td>Returns column as vector</td>
 </tr>
 <tr class="even">
-<td>[ “colname” ]</td>
-<td>Returns one-column data.frame</td>
+<td>
+<code>[ "&lt;colname&gt;" ]</code>or <code>[ &lt;pos&gt; ]</code>
+</td>
+<td>Returns one-column <code>data.frame</code>
+</td>
 <td>Returns one-column tibble</td>
 </tr>
 <tr class="odd">
-<td>[ multi-column ]</td>
+<td><code>[ multi-column ]</code></td>
 <td>Preserves source structure</td>
 <td>Preserves source structure</td>
 </tr>
 <tr class="even">
-<td>[ , “colname” ]</td>
+<td><code>[ , "colname" ]</code></td>
 <td>Returns column as vector</td>
 <td>Returns one-column tibble</td>
 </tr>
 <tr class="odd">
-<td>[[ “colname” ]] or [[ pos ]]</td>
+<td>
+<code>[[ "&lt;colname&gt;" ]]</code> or <code>[[ &lt;pos&gt; ]]</code>
+</td>
 <td>Returns column as vector</td>
 <td>Returns column as vector</td>
 </tr>
 <tr class="even">
-<td>[[ c(1, 3) ]]</td>
+<td><code>[[ multi-pos ]]</code></td>
 <td>Ambiguous compound index → scalar value</td>
 <td>Error: only one column can be extracted</td>
 </tr>
 <tr class="odd">
-<td>dplyr::pull()</td>
+<td><code><a href="https://dplyr.tidyverse.org/reference/pull.html">dplyr::pull()</a></code></td>
 <td>Supported</td>
 <td>Supported</td>
 </tr>
 <tr class="even">
-<td>$ &lt;- with short vector</td>
+<td>
+<code>$&lt;-</code> with short vector</td>
 <td>Recycles if length divides evenly</td>
 <td>Error unless length is 1 or matches nrow</td>
 </tr>
 <tr class="odd">
-<td>$ &lt;- with length mismatch</td>
+<td>
+<code>$&lt;-</code> with length mismatch</td>
 <td>Warns but allows</td>
 <td>Throws error</td>
 </tr>
-<tr class="even">
-<td>Method dispatch behavior</td>
-<td>Based on data.frame</td>
-<td>Controlled by tbl_df / tbl class layers</td>
-</tr>
 </tbody>
-</table></section><section id="create-by-row-tribble" class="level1"><h1>Create by Row: tribble()</h1>
+</table></section><section id="create-by-row-tribble" class="level1"><h1>Create by Row: <code>tribble()</code>
+</h1>
 <p>The <code><a href="https://tibble.tidyverse.org/reference/tribble.html">tibble::tribble()</a></code> function (“transposed tibble”) offers a readable, row-wise syntax that makes small tables clearer, especially in documentation, examples, and teaching material.</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span><span class="op">(</span></span>
 <span>  <span class="op">~</span><span class="va">letters</span>, <span class="op">~</span><span class="va">numbers</span>,</span>
 <span>  <span class="st">"a"</span>,      <span class="fl">1</span>,</span>
 <span>  <span class="st">"b"</span>,      <span class="fl">2</span>,</span>
@@ -809,7 +864,7 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 </ul>
 <p>Base R doesn’t offer a native row-wise constructor for <code>data.frame</code>, and there are not simple workarounds (as far as I know!). Base R can construct row-wise structures using <code>rbind</code>, but these have major limitations:</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"b"</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -821,7 +876,7 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 </div>
 <p>This returns a character <code>matrix</code> not a <code>data.frame</code>. Type information is lost due to coercion:</p>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"b"</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="fl">3</span><span class="op">)</span></span>
