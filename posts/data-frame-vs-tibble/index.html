@@ -304,50 +304,23 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 </ul>
 <p>Let’s print both and compare their outputs.</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span></span>
-<span><span class="co">##    is_vowel numbers values letters_lower letters_upper</span></span>
-<span><span class="co">## 1      TRUE       1    1.1             a             A</span></span>
-<span><span class="co">## 2     FALSE       2    1.2             b             B</span></span>
-<span><span class="co">## 3     FALSE       3    1.3             c             C</span></span>
-<span><span class="co">## 4     FALSE       4    1.4             d             D</span></span>
-<span><span class="co">## 5      TRUE       5    1.5             e             E</span></span>
-<span><span class="co">## 6     FALSE       6    1.6             f             F</span></span>
-<span><span class="co">## 7     FALSE       7    1.7             g             G</span></span>
-<span><span class="co">## 8     FALSE       8    1.8             h             H</span></span>
-<span><span class="co">## 9      TRUE       9    1.9             i             I</span></span>
-<span><span class="co">## 10    FALSE      10    2.0             j             J</span></span>
-<span><span class="co">## 11    FALSE      11    2.1             k             K</span></span>
-<span><span class="co">## 12    FALSE      12    2.2             l             L</span></span>
-<span><span class="co">## 13    FALSE      13    2.3             m             M</span></span>
-<span><span class="co">## 14    FALSE      14    2.4             n             N</span></span>
-<span><span class="co">## 15     TRUE      15    2.5             o             O</span></span>
-<span><span class="co">## 16    FALSE      16    2.6             p             P</span></span>
-<span><span class="co">## 17    FALSE      17    2.7             q             Q</span></span>
-<span><span class="co">## 18    FALSE      18    2.8             r             R</span></span>
-<span><span class="co">## 19    FALSE      19    2.9             s             S</span></span>
-<span><span class="co">## 20    FALSE      20    3.0             t             T</span></span>
-<span><span class="co">## 21     TRUE      21    3.1             u             U</span></span>
-<span><span class="co">## 22    FALSE      22    3.2             v             V</span></span>
-<span><span class="co">## 23    FALSE      23    3.3             w             W</span></span>
-<span><span class="co">## 24    FALSE      24    3.4             x             X</span></span>
-<span><span class="co">## 25    FALSE      25    3.5             y             Y</span></span>
-<span><span class="co">## 26    FALSE      26    3.6             z             Z</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 26</span></span>
+<span><span class="co">## Columns: 5</span></span>
+<span><span class="co">## $ is_vowel      &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TR…</span></span>
+<span><span class="co">## $ numbers       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…</span></span>
+<span><span class="co">## $ values        &lt;dbl&gt; 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2…</span></span>
+<span><span class="co">## $ letters_lower &lt;chr&gt; "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "…</span></span>
+<span><span class="co">## $ letters_upper &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "…</span></span>
 <span></span>
-<span><span class="va">tbl</span></span>
-<span><span class="co">## # A tibble: 26 × 5</span></span>
-<span><span class="co">##    is_vowel numbers values letters_lower letters_upper</span></span>
-<span><span class="co">##    &lt;lgl&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        </span></span>
-<span><span class="co">##  1 TRUE           1    1.1 a             A            </span></span>
-<span><span class="co">##  2 FALSE          2    1.2 b             B            </span></span>
-<span><span class="co">##  3 FALSE          3    1.3 c             C            </span></span>
-<span><span class="co">##  4 FALSE          4    1.4 d             D            </span></span>
-<span><span class="co">##  5 TRUE           5    1.5 e             E            </span></span>
-<span><span class="co">##  6 FALSE          6    1.6 f             F            </span></span>
-<span><span class="co">##  7 FALSE          7    1.7 g             G            </span></span>
-<span><span class="co">##  8 FALSE          8    1.8 h             H            </span></span>
-<span><span class="co">##  9 TRUE           9    1.9 i             I            </span></span>
-<span><span class="co">## 10 FALSE         10    2   j             J            </span></span>
-<span><span class="co">## # ℹ 16 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 26</span></span>
+<span><span class="co">## Columns: 5</span></span>
+<span><span class="co">## $ is_vowel      &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TR…</span></span>
+<span><span class="co">## $ numbers       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…</span></span>
+<span><span class="co">## $ values        &lt;dbl&gt; 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2…</span></span>
+<span><span class="co">## $ letters_lower &lt;chr&gt; "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "…</span></span>
+<span><span class="co">## $ letters_upper &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "…</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="subset" class="level1"><h1>Subset</h1>
 <p>Both <code>data.frame</code>s and <code>tibble</code>s support subsetting with <code>$</code>, <code>[</code>, and <code>[[</code>, but they behave differently in edge cases. Tibbles tend to be stricter and more predictable, helping catch subtle bugs early.</p>
@@ -638,34 +611,15 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 <span><span class="co">##  [1] 27 28 27 28 27 28 27 28 27 28 27 28 27 28 27 28 27 28 27 28 27 28 27 28 27</span></span>
 <span><span class="co">## [26] 28</span></span>
 <span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">##    is_vowel numbers values letters_lower letters_upper more_numbers</span></span>
-<span><span class="co">## 1      TRUE       1    1.1             a             A           27</span></span>
-<span><span class="co">## 2     FALSE       2    1.2             b             B           28</span></span>
-<span><span class="co">## 3     FALSE       3    1.3             c             C           27</span></span>
-<span><span class="co">## 4     FALSE       4    1.4             d             D           28</span></span>
-<span><span class="co">## 5      TRUE       5    1.5             e             E           27</span></span>
-<span><span class="co">## 6     FALSE       6    1.6             f             F           28</span></span>
-<span><span class="co">## 7     FALSE       7    1.7             g             G           27</span></span>
-<span><span class="co">## 8     FALSE       8    1.8             h             H           28</span></span>
-<span><span class="co">## 9      TRUE       9    1.9             i             I           27</span></span>
-<span><span class="co">## 10    FALSE      10    2.0             j             J           28</span></span>
-<span><span class="co">## 11    FALSE      11    2.1             k             K           27</span></span>
-<span><span class="co">## 12    FALSE      12    2.2             l             L           28</span></span>
-<span><span class="co">## 13    FALSE      13    2.3             m             M           27</span></span>
-<span><span class="co">## 14    FALSE      14    2.4             n             N           28</span></span>
-<span><span class="co">## 15     TRUE      15    2.5             o             O           27</span></span>
-<span><span class="co">## 16    FALSE      16    2.6             p             P           28</span></span>
-<span><span class="co">## 17    FALSE      17    2.7             q             Q           27</span></span>
-<span><span class="co">## 18    FALSE      18    2.8             r             R           28</span></span>
-<span><span class="co">## 19    FALSE      19    2.9             s             S           27</span></span>
-<span><span class="co">## 20    FALSE      20    3.0             t             T           28</span></span>
-<span><span class="co">## 21     TRUE      21    3.1             u             U           27</span></span>
-<span><span class="co">## 22    FALSE      22    3.2             v             V           28</span></span>
-<span><span class="co">## 23    FALSE      23    3.3             w             W           27</span></span>
-<span><span class="co">## 24    FALSE      24    3.4             x             X           28</span></span>
-<span><span class="co">## 25    FALSE      25    3.5             y             Y           27</span></span>
-<span><span class="co">## 26    FALSE      26    3.6             z             Z           28</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 26</span></span>
+<span><span class="co">## Columns: 6</span></span>
+<span><span class="co">## $ is_vowel      &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TR…</span></span>
+<span><span class="co">## $ numbers       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…</span></span>
+<span><span class="co">## $ values        &lt;dbl&gt; 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2…</span></span>
+<span><span class="co">## $ letters_lower &lt;chr&gt; "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "…</span></span>
+<span><span class="co">## $ letters_upper &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "…</span></span>
+<span><span class="co">## $ more_numbers  &lt;int&gt; 27, 28, 27, 28, 27, 28, 27, 28, 27, 28, 27, 28, 27, 28, …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In general, a <code>tibble</code> does not allow it</p>
 <div class="cell">
@@ -683,21 +637,16 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl</span><span class="op">$</span><span class="va">more_numbers</span> <span class="op">&lt;-</span> <span class="fl">27</span><span class="op">:</span><span class="fl">52</span> <span class="co"># Length 26 — accepted</span></span>
 <span><span class="va">tbl</span><span class="op">$</span><span class="va">constant</span> <span class="op">&lt;-</span> <span class="fl">53</span>        <span class="co"># Length 1 — accepted</span></span>
 <span></span>
-<span><span class="va">tbl</span></span>
-<span><span class="co">## # A tibble: 26 × 7</span></span>
-<span><span class="co">##    is_vowel numbers values letters_lower letters_upper more_numbers constant</span></span>
-<span><span class="co">##    &lt;lgl&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;                &lt;int&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">##  1 TRUE           1    1.1 a             A                       27       53</span></span>
-<span><span class="co">##  2 FALSE          2    1.2 b             B                       28       53</span></span>
-<span><span class="co">##  3 FALSE          3    1.3 c             C                       29       53</span></span>
-<span><span class="co">##  4 FALSE          4    1.4 d             D                       30       53</span></span>
-<span><span class="co">##  5 TRUE           5    1.5 e             E                       31       53</span></span>
-<span><span class="co">##  6 FALSE          6    1.6 f             F                       32       53</span></span>
-<span><span class="co">##  7 FALSE          7    1.7 g             G                       33       53</span></span>
-<span><span class="co">##  8 FALSE          8    1.8 h             H                       34       53</span></span>
-<span><span class="co">##  9 TRUE           9    1.9 i             I                       35       53</span></span>
-<span><span class="co">## 10 FALSE         10    2   j             J                       36       53</span></span>
-<span><span class="co">## # ℹ 16 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 26</span></span>
+<span><span class="co">## Columns: 7</span></span>
+<span><span class="co">## $ is_vowel      &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TR…</span></span>
+<span><span class="co">## $ numbers       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…</span></span>
+<span><span class="co">## $ values        &lt;dbl&gt; 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2…</span></span>
+<span><span class="co">## $ letters_lower &lt;chr&gt; "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "…</span></span>
+<span><span class="co">## $ letters_upper &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "…</span></span>
+<span><span class="co">## $ more_numbers  &lt;int&gt; 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, …</span></span>
+<span><span class="co">## $ constant      &lt;dbl&gt; 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Also the <code>$&lt;-</code> assignment is syntactic sugar:</p>
 <div class="cell">
@@ -776,50 +725,23 @@ Tibbles eliminate many of the quirks of base R <code>data.frame</code>, making t
 </div>
 <p>Note that Using <code>$&lt;-</code> in this manner returns a modified copy but does not alter the original df or tbl object unless explicitly reassigned.</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span></span>
-<span><span class="co">##    is_vowel numbers values letters_lower letters_upper</span></span>
-<span><span class="co">## 1      TRUE       1    1.1             a             A</span></span>
-<span><span class="co">## 2     FALSE       2    1.2             b             B</span></span>
-<span><span class="co">## 3     FALSE       3    1.3             c             C</span></span>
-<span><span class="co">## 4     FALSE       4    1.4             d             D</span></span>
-<span><span class="co">## 5      TRUE       5    1.5             e             E</span></span>
-<span><span class="co">## 6     FALSE       6    1.6             f             F</span></span>
-<span><span class="co">## 7     FALSE       7    1.7             g             G</span></span>
-<span><span class="co">## 8     FALSE       8    1.8             h             H</span></span>
-<span><span class="co">## 9      TRUE       9    1.9             i             I</span></span>
-<span><span class="co">## 10    FALSE      10    2.0             j             J</span></span>
-<span><span class="co">## 11    FALSE      11    2.1             k             K</span></span>
-<span><span class="co">## 12    FALSE      12    2.2             l             L</span></span>
-<span><span class="co">## 13    FALSE      13    2.3             m             M</span></span>
-<span><span class="co">## 14    FALSE      14    2.4             n             N</span></span>
-<span><span class="co">## 15     TRUE      15    2.5             o             O</span></span>
-<span><span class="co">## 16    FALSE      16    2.6             p             P</span></span>
-<span><span class="co">## 17    FALSE      17    2.7             q             Q</span></span>
-<span><span class="co">## 18    FALSE      18    2.8             r             R</span></span>
-<span><span class="co">## 19    FALSE      19    2.9             s             S</span></span>
-<span><span class="co">## 20    FALSE      20    3.0             t             T</span></span>
-<span><span class="co">## 21     TRUE      21    3.1             u             U</span></span>
-<span><span class="co">## 22    FALSE      22    3.2             v             V</span></span>
-<span><span class="co">## 23    FALSE      23    3.3             w             W</span></span>
-<span><span class="co">## 24    FALSE      24    3.4             x             X</span></span>
-<span><span class="co">## 25    FALSE      25    3.5             y             Y</span></span>
-<span><span class="co">## 26    FALSE      26    3.6             z             Z</span></span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 26</span></span>
+<span><span class="co">## Columns: 5</span></span>
+<span><span class="co">## $ is_vowel      &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TR…</span></span>
+<span><span class="co">## $ numbers       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…</span></span>
+<span><span class="co">## $ values        &lt;dbl&gt; 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2…</span></span>
+<span><span class="co">## $ letters_lower &lt;chr&gt; "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "…</span></span>
+<span><span class="co">## $ letters_upper &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "…</span></span>
 <span></span>
-<span><span class="va">tbl</span></span>
-<span><span class="co">## # A tibble: 26 × 5</span></span>
-<span><span class="co">##    is_vowel numbers values letters_lower letters_upper</span></span>
-<span><span class="co">##    &lt;lgl&gt;      &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        </span></span>
-<span><span class="co">##  1 TRUE           1    1.1 a             A            </span></span>
-<span><span class="co">##  2 FALSE          2    1.2 b             B            </span></span>
-<span><span class="co">##  3 FALSE          3    1.3 c             C            </span></span>
-<span><span class="co">##  4 FALSE          4    1.4 d             D            </span></span>
-<span><span class="co">##  5 TRUE           5    1.5 e             E            </span></span>
-<span><span class="co">##  6 FALSE          6    1.6 f             F            </span></span>
-<span><span class="co">##  7 FALSE          7    1.7 g             G            </span></span>
-<span><span class="co">##  8 FALSE          8    1.8 h             H            </span></span>
-<span><span class="co">##  9 TRUE           9    1.9 i             I            </span></span>
-<span><span class="co">## 10 FALSE         10    2   j             J            </span></span>
-<span><span class="co">## # ℹ 16 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span></span>
+<span><span class="co">## Rows: 26</span></span>
+<span><span class="co">## Columns: 5</span></span>
+<span><span class="co">## $ is_vowel      &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, TR…</span></span>
+<span><span class="co">## $ numbers       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…</span></span>
+<span><span class="co">## $ values        &lt;dbl&gt; 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2…</span></span>
+<span><span class="co">## $ letters_lower &lt;chr&gt; "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "…</span></span>
+<span><span class="co">## $ letters_upper &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "…</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="summary-of-differences" class="level1"><h1>Summary of Differences</h1>
 <table class="caption-top table">
