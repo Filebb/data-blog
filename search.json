@@ -18,7 +18,7 @@
     "href": "posts/data-frame-vs-tibble/index.html",
     "title": "\ndata.frame vs tibble\n",
     "section": "",
-    "text": "## \n## Attaching package: 'dplyr'\n## The following objects are masked from 'package:stats':\n## \n##     filter, lag\n## The following objects are masked from 'package:base':\n## \n##     intersect, setdiff, setequal, union"
+    "text": "In R, tabular data is typically stored using either a data.frame or a tibble.\nWhile they serve similar purposes, their behavior diverges in ways that affect printing, subsetting, and workflow safety.\nThis post compares their creation and structure, highlights key differences, and explains why tibbles are often the preferred choice in modern tidyverse workflows."
   },
   {
     "objectID": "posts/data-frame-vs-tibble/index.html#list-name-extractor",
