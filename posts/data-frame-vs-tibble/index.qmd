@@ -9,6 +9,7 @@ editor_options:
 
 ```{r packages}
 #| echo: false
+#| message: false
 
 library(tibble)
 library(dplyr)
