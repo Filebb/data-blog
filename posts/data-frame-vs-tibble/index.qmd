@@ -2,10 +2,18 @@
 title: "`data.frame` vs `tibble`"
 description: "Comparing data.frame and tibble behavior in R: creation, subsetting, printing, and more."
 date: "2025-07-28"
-categories: [R, base::data.frame, tibble::tibble, tibble::tribble]
+categories: [R, data.frame, tibble, tribble]
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r packages}
+#| echo: false
+
+library(tibble)
+library(dplyr)
+```
+
 
 # Introduction
 
@@ -20,16 +28,15 @@ workflows.
 
 # Create
 
-Base R provides the `data.frame` structure for storing and manipulating tabular
-data.  
-A `data.frame` is essentially a list of equal-length vectors, where each vector
-becomes a column.
+Base R provides the `base::data.frame` structure for storing and manipulating
+tabular data. A `data.frame` is essentially a `list` of equal-length vectors,
+where each vector becomes a column.
 
 Here's how to create a structured `data.frame` with five columns:
 
 ```{r}
 df <-
-  base::data.frame(
+  data.frame(
     is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
                       TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
                       FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -41,15 +48,15 @@ df <-
   )
 ```
 
-Tibbles are the tidyverse alternative to `data.frame`.  
-Tibbles eliminate many of the quirks of base R `data.frame`, making them safer
-and more predictable in data workflows.
+Tibbles are the tidyverse alternative to `data.frame`. Tibbles eliminate many of
+the quirks of base R `data.frame`, making them safer and more predictable in
+data workflows.
 
-Here’s the `tibble` equivalent using `tibble::tibble()`:
+Here’s the `tibble` equivalent using `tibble::tibble`:
 
 ```{r}
 tbl <-
-  tibble::tibble(
+  tibble(
     is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
                       TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
                       FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -71,27 +78,26 @@ Although `df` and `tbl` store the same data, they belong to different object
 classes:
 
 ```{r}
-base::class(df)
+class(df)
 
-base::class(tbl)
+class(tbl)
 ```
 
 Tibbles extend base data-frames by layering two additional classes: `tbl` and
-`tbl_df`.
-This class hierarchy enables customized printing, stricter subsetting, and
-compatibility with tidyverse functions, all while remaining fully interoperable
-with functions expecting a plain `data.frame`.
+`tbl_df`. This class hierarchy enables customized printing, stricter subsetting,
+and compatibility with tidyverse functions, all while remaining fully
+interoperable with functions expecting a plain `data.frame`.
 
-You can use inherits() for targeted class checks:
+One can use `base::inherits` for targeted class checks:
 
 ```{r}
-base::inherits(df, "data.frame")
+inherits(df, "data.frame")
 
-base::inherits(tbl, "data.frame")
+inherits(tbl, "data.frame")
 
-base::inherits(df, "tbl")
+inherits(df, "tbl")
 
-base::inherits(tbl, "tbl")
+inherits(tbl, "tbl")
 ```
 
 # Structure Comparison
@@ -103,18 +109,18 @@ However, `tibble`s carry extra metadata for printing and structure.
 Let’s inspect them:
 
 ```{r}
-base::typeof(df)
+typeof(df)
 
-base::typeof(tbl)
+typeof(tbl)
 ```
 
-Using `typeof()` they appear identical.
-But `str()` reveals more subtle differences:
+Using `base::typeof` they appear identical. But `utils::str()` reveals more
+subtle differences:
 
 ```{r}
-utils::str(df)
+str(df)
 
-utils::str(tbl)
+str(tbl)
 ```
 
 This reinforces the idea that tibbles are still lists with class `data.frame`,
@@ -123,11 +129,9 @@ but their extra class layers change how they behave and display.
 # Print
 
 The first thing you’ll notice is how differently `data.frame` and `tibble`
-print.
-Tibbles have a print method that shows only the first 10 rows, and all the
-columns that fit on screen.
-This makes working with large datasets much easier.
-Each column in a tibble includes a compact type annotation, such as:
+print. Tibbles have a print method that shows only the first 10 rows, and all
+the columns that fit on screen. This makes working with large datasets much
+easier. Each column in a tibble includes a compact type annotation, such as:
 
 - `<lgl>` — logical
 - `<int>` — integer
@@ -137,9 +141,9 @@ Each column in a tibble includes a compact type annotation, such as:
 Let’s print both and compare their outputs.
 
 ```{r}
-dplyr::glimpse(df)
+df
 
-dplyr::glimpse(tbl)
+tbl
 ```
 
 # Subset
@@ -179,9 +183,9 @@ workflow.
 Note that the common `$` syntax is a syntactic sugar:
 
 ```{r}
-identical(base::`$`(df, "values"), df$values)
+identical(`$`(df, "values"), df$values)
 
-identical(base::`$`(tbl, "values"), tbl$values)
+identical(`$`(tbl, "values"), tbl$values)
 ```
 
 ## Partial Matching
@@ -239,9 +243,9 @@ surprises when chaining operations.
 Note that the common `[` syntax is a syntactic sugar:
 
 ```{r}
-identical(base::`[`(df, "values"), df["values"])
+identical(`[`(df, "values"), df["values"])
 
-identical(base::`[`(tbl, "values"), tbl["values"])
+identical(`[`(tbl, "values"), tbl["values"])
 ```
 
 Subset operator can be used to select more columns:
@@ -274,19 +278,19 @@ meaningful way:
 ```{r}
 df[, "values"] # Returns a vector (column extracted)
 
-base::is.data.frame(df[, "values"])
+is.data.frame(df[, "values"])
 
-base::class(df[, "values"])
+class(df[, "values"])
 
-utils::str(df[, "values"])
+str(df[, "values"])
 
 tbl[, "values"] # Returns a tibble (preserves tbl_df structure)
 
-tibble::is_tibble(tbl[, "values"])
+is_tibble(tbl[, "values"])
 
-base::class(tbl[, "values"])
+class(tbl[, "values"])
 
-utils::str(tbl[, "values"])
+str(tbl[, "values"])
 ```
 
 This behavior reflects tibble’s design philosophy: predictable and
@@ -335,9 +339,9 @@ In tidyverse workflows, `dplyr::pull` is a friendly wrapper around `[[`, with
 added clarity:
 
 ```{r}
-dplyr::pull(df, "values")
+pull(df, "values")
 
-dplyr::pull(tbl, "values")
+pull(tbl, "values")
 ```
 
 Note: `pull` works seamlessly with both `data.frame` and `tibble`.
@@ -345,9 +349,9 @@ Note: `pull` works seamlessly with both `data.frame` and `tibble`.
 As with `$` and `[ ]`, the `[[ ]]` operator is syntactic sugar:
 
 ```{r}
-all(base::`[[`(df, "values") == df[["values"]])
+all(`[[`(df, "values") == df[["values"]])
 
-all(base::`[[`(tbl, "values") == tbl[["values"]])
+all(`[[`(tbl, "values") == tbl[["values"]])
 ```
 
 # Add a New Column Using `$<-`
@@ -380,7 +384,7 @@ of rows:
 tbl$more_numbers <- 27:52 # Length 26 — accepted
 tbl$constant <- 53        # Length 1 — accepted
 
-dplyr::glimpse(tbl)
+glimpse(tbl)
 ```
 
 Also the `$<-` assignment is syntactic sugar:
@@ -388,7 +392,7 @@ Also the `$<-` assignment is syntactic sugar:
 ```{r}
 # let's restart from the original df
 df <-
-  base::data.frame(
+  data.frame(
     is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
                       TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
                       FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -404,7 +408,7 @@ df <-
 
 # let's restart from the original tbl
 tbl <-
-  tibble::tibble(
+  tibble(
     is_vowel      = c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
                       TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE,
                       FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE,
@@ -423,9 +427,9 @@ Note that Using `$<-` in this manner returns a modified copy but does not alter
 the original df or tbl object unless explicitly reassigned.
 
 ```{r}
-dplyr::glimpse(df)
+glimpse(df)
 
-dplyr::glimpse(tbl)
+glimpse(tbl)
 ```
 
 
@@ -449,12 +453,12 @@ dplyr::glimpse(tbl)
 
 # Create by Row: `tribble()`
 
-The `tibble::tribble()` function ("transposed tibble") offers a readable,
+The `tibble::tribble` function ("transposed tibble") offers a readable,
 row-wise syntax that makes small tables clearer, especially in documentation,
 examples, and teaching material.
 
 ```{r}
-tibble::tribble(
+tribble(
   ~letters, ~numbers,
   "a",      1,
   "b",      2,
@@ -468,14 +472,14 @@ Advantages:
 
 - Row-wise entry: Mirrors how we often conceptualize tables.
 
-- Safe type inference: Similar to `tibble()`, avoids surprises.
+- Safe type inference: Similar to `tibble`, avoids surprises.
 
 Base R doesn't offer a native row-wise constructor for `data.frame`, and there
 are not simple workarounds (as far as I know!). Base R can construct row-wise
 structures using `rbind`, but these have major limitations:
 
 ```{r}
-mat <- base::rbind(
+mat <- rbind(
   c("a", 1),
   c("b", 2),
   c("c", 3)
