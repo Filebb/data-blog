@@ -1,6 +1,6 @@
 ---
-title: "`data.frame` vs `tibble`"
-description: "Comparing data.frame and tibble behavior in R: creation, subsetting, printing, and more."
+title: "Data Frames vs Tibbles"
+description: "Comparing `data.frame` and `tibble` behavior in R: creation, subsetting, printing, and more."
 date: "2025-07-28"
 categories: [R, data.frame, tibble, tribble]
 editor_options: 
