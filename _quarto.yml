@@ -3,20 +3,26 @@ project:
 
 website:
   title: "Data Blog"
+  
   navbar:
     left:
-      - text: "R packages ref"
-        menu: 
-          - text: "tidyverse"
-            href: refs/tidyverse-ref.qmd
+      - sidebar:packages-ref
       
     right:
       - about.qmd
+      
+  sidebar:
+    - id: packages-ref
+      title: R Packages Reference
+      style: docked
+      background: light
+      contents: 
+        - references/packages/tidyverse.qmd
+        
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      - default
     highlight-style: atom-one
     code-link: true
     css: styles.css

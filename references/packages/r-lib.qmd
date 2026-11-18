@@ -1,0 +1,42 @@
+---
+title: "r-lib"
+---
+
+## Package Development
+  + [devtools](https://devtools.r-lib.org)
+  + [gitcreds](https://gitcreds.r-lib.org)
+  + [lifecycle](https://lifecycle.r-lib.org)
+  + [pkgdown](https://pkgdown.r-lib.org)
+  + [remotes](https://remotes.r-lib.org)
+  + [roxygen2](https://roxygen2.r-lib.org)
+  + [testthat](https://testthat.r-lib.org)
+  + [usethis](https://usethis.r-lib.org)
+  
+## Program
+  + [cli](https://cli.r-lib.org)
+  + [rlang](https://rlang.r-lib.org)
+  + [vctrs](https://vctrs.r-lib.org)
+  + [withr](https://withr.r-lib.org)
+  
+## Data Types
+  + [bit64](https://bit64.r-lib.org)
+  
+## Data Manipulation
+  + [slider](https://slider.r-lib.org)
+  
+## Visualisation Helpers
+  + [scales](https://scales.r-lib.org)
+  
+## System & File Infrastructure
+  + [fs](https://fs.r-lib.orgindex.html)
+  + [here](https://here.r-lib.org)
+  + [nanoparquet](https://nanoparquet.r-lib.org)
+  + [pak](https://pak.r-lib.org)
+
+## Diagnostics
+  + [sessioninfo](https://sessioninfo.r-lib.org)
+
+## Performance & Debugging Tools
+  + [bench](https://bench.r-lib.org)
+  + [lobstr](https://lobstr.r-lib.org)
+  + [waldo](https://waldo.r-lib.org)

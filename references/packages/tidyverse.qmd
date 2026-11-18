@@ -1,0 +1,184 @@
+---
+title: "Tidyverse"
+---
+
+```{r}
+#| echo: false
+
+options(tidyverse.quiet = TRUE)
+
+library(tidyverse)
+library(gt)
+
+hex_address <-
+  "https://raw.githubusercontent.com/rstudio/hex-stickers/refs/heads/main/SVG/"
+
+cheatsheets_address <- "https://github.com/rstudio/cheatsheets/blob/main/"
+```
+
+```{r}
+#| echo: false
+
+make_table <- function(table) {
+  table |> 
+    select(-package) |> 
+    gt() |> 
+    tab_options(column_labels.hidden = TRUE) |> 
+    text_transform(
+      locations = cells_body(columns = "Hex Sticker"),
+      fn = \(x) web_image(url = x, height = 70)
+    ) |>
+    text_transform(
+      locations = cells_body(columns = "URL"),
+      fn = function(x) {
+        map2_chr(x, table$package, \(x, pkg) {
+          html(str_glue("<a href='{x}' target='_blank'>{pkg}</a>"))
+        }
+        )
+      }
+    ) |>
+    text_transform(
+      locations = cells_body(columns = "Cheatsheets"),
+      fn = function(x) {
+        map_chr(x, \(x) {
+          if (is.na(x)) {
+            ""
+          } else{
+            html(str_glue("<a href='{x}' target='_blank'>cheatsheet</a>"))
+          }
+        }
+        )
+      }
+    )
+}
+```
+
+## Meta Package
+
+```{r}
+#| echo: false
+
+tibble(
+  package = "tidyverse",
+  "Hex Sticker" = str_glue("{hex_address}{package}.svg"),
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = NA
+) |>
+  make_table()
+```
+
+## Core
+
+```{r}
+#| echo: false
+
+core <- c("dplyr", "forcats", "ggplot2", "lubridate", "purrr",
+          "readr", "stringr", "tibble", "tidyr")
+
+cheatsheets <- c("data-transformation", "factors", "data-visualization",
+                 "lubridate", "purrr", "data-import", "strings", NA, "tidyr")
+
+tibble(
+  package = core,
+  "Hex Sticker" = str_glue("{hex_address}{package}.svg"),
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = if_else(is.na(cheatsheets), NA_character_,
+                          str_glue("{cheatsheets_address}{cheatsheets}.pdf"))
+) |> 
+  make_table()
+```
+
+## Program
+
+```{r}
+#| echo: false
+
+tibble(
+  package = c("glue", "magrittr"),
+  hex = c("glue", "pipe"),
+  "Hex Sticker" = str_glue("{hex_address}{hex}.svg"),
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = NA
+) |> 
+  select(-hex) |> 
+  make_table()
+```
+
+## Wrangle
+
+```{r}
+#| echo: false
+
+tibble(
+  package = "hms",
+  "Hex Sticker" = str_glue("{hex_address}{package}.svg"),
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = NA
+) |> 
+  make_table()
+```
+
+## dplyr Backends
+
+
+```{r}
+#| echo: false
+
+tibble(
+  package = c("dbplyr", "dtplyr", "duckplyr"),
+  "Hex Sticker" = str_glue("{hex_address}{package}.svg"),
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = NA
+) |> 
+  make_table()
+```
+
+## Import
+
+```{r}
+#| echo: false
+
+packages <- c("googledrive", "googlesheets4", "haven",
+              "readxl", "rvest", "vroom")
+
+hex <- str_glue("{hex_address}{packages}.svg")
+hex[[6]] <- NA
+
+tibble(
+  package = packages,
+  "Hex Sticker" = hex,
+  "URL" = hex_address,
+  "Cheatsheets" = NA
+) |>
+  make_table()
+```
+
+## Get Help
+
+```{r}
+#| echo: false
+
+tibble(
+  package = "reprex",
+  "Hex Sticker" = str_glue("{hex_address}{package}.svg"),
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = NA
+) |>
+  make_table()
+```
+
+## Data
+
+```{r}
+#| echo: false
+
+tibble(
+  package = "nycflights13",
+  "Hex Sticker" = NA,
+  "URL" = str_glue("https://{package}.tidyverse.org"),
+  "Cheatsheets" = NA
+) |>
+  make_table()
+```
+
+
